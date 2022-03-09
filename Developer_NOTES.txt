@@ -1,0 +1,18 @@
+I produce executive briefs of PT results and typically do automated pushes to confluence.  The most powerful reporting is through dashboards per my experience.  It allows for fully socialized and democratized results.  A few percentiles coupled with min and max give us a sense of whether or not long running or short duration transactions are outliers, a scatterplot which I didn't include also does justice to that concern visually.  Obviously throughput, how much over t and average response times are good high-level reads.  The dashboard would be coupled with custom dashboards for the infra and additional dashboards for trending release over release and historically.
+
+In any case, this script would be used as a sampler since it instantiates a browser via selenium integration.  It would be mixed in with vanilla Jmeter tests producing the bulk of the load.  With more time I'd instrument the webdriver code snippet with performance logging to leveage chrome's performance logging.
+
+Massaging this into javascript and importing quite a few packages:
+DesiredCapabilities caps = DesiredCapabilities.chrome();
+	LoggingPreferences logPrefs = new LoggingPreferences();
+    	logPrefs.enable(LogType.BROWSER, Level.ALL);
+    	logPrefs.enable(LogType.PERFORMANCE, Level.INFO);
+    	caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+
+    	driver = new Augmenter().augment(new RemoteWebDriver(new URL(WEBDRIVER_SERVER_URL), caps));
+    	Capabilities actualCaps = ((HasCapabilities) driver).getCapabilities();
+    	System.out.println("Actual caps: " + actualCaps);
+
+The better solution for this use case would be Selenium leveraging CDP for a complete implementation of Chrome Developer Tools.
+
+This utilized INfluxDB, Grafana, InfluxDB plugin, chromedriver, webdriver plugin, standard listener pack.
